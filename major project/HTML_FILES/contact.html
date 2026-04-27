@@ -1,0 +1,190 @@
+<!-- ============================================================
+     contact.html — SmartGovWeb Contact Us Page
+     ============================================================
+     Provides contact information (email, phone, address) and a
+     message form for citizens. Also includes an admin-only inbox
+     section for viewing submitted messages.
+     Dependencies: index1.css, index1.js (for shared auth/nav UI)
+     ============================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - SmartGovWeb</title>
+    <!-- Google Fonts: Roboto for consistent typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 for vector icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <!-- Shared stylesheet with the main portal -->
+    <link rel="stylesheet" href="../CSS_FILES/index1.css">
+</head>
+<body style="opacity:1;">
+
+    <!-- ==========================================================
+         MAIN APP CONTAINER
+         Uses inline style to force visibility (bypasses loading screen).
+         ========================================================== -->
+    <div id="app-content" class="app-content" style="display:block;">
+        <!-- =======================================================
+             NAVIGATION BAR (shared structure with index1.html)
+             Includes logo, nav links, "More" dropdown, and profile.
+             Admin link is hidden by default; shown via JS for admins.
+             ======================================================= -->
+        <nav>
+            <div class="logo">
+                <i class="fas fa-landmark"></i> SmartGovWeb
+            </div>
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="index1.html">
+                        <button class="nav-btn">
+                            <i class="fas fa-users"></i> Home
+                        </button>
+                    </a>
+                    <!-- Admin link: hidden unless current user is an admin -->
+                    <a href="index1.html?view=admin" id="admin-nav-link" style="display:none;">
+                        <button class="nav-btn" id="btn-admin">
+                            <i class="fas fa-user-shield"></i> Admin Panel
+                        </button>
+                    </a>
+                    <a href="complaint.html" target="_blank">
+                        <button class="nav-btn">
+                            <i class="fa-solid fa-pen"></i> Complaint
+                        </button>
+                    </a>
+                    <!-- "More" dropdown for secondary pages -->
+                    <div class="more-dropdown" style="position: relative; display: inline-block;">
+                        <button id="more-btn" class="dropdown-btn" onclick="toggleMoreDropdown(event)" title="More">
+                            <i class="fas fa-ellipsis-v"></i> More
+                        </button>
+                        <div class="more-menu" id="more-menu">
+                            <a href="about.html"><i class="fas fa-info-circle"></i> About Us</a>
+                            <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- ===================================================
+                     PROFILE DROPDOWN
+                     Populated dynamically from Firebase user data.
+                     =================================================== -->
+                <div class="profile-wrapper">
+                    <div class="profile-btn" id="profile-btn" title="Account">
+                        <span id="profile-initials">?</span>
+                    </div>
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <div class="profile-header">
+                            <div class="profile-avatar-lg" id="dropdown-avatar">?</div>
+                            <div class="profile-info-text">
+                                <strong id="dropdown-name">Loading...</strong>
+                                <p id="dropdown-email">...</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="profileBtn"><i class="fas fa-user"></i> My Profile</button>
+                        <button class="dropdown-item"><i class="fas fa-cog"></i> Settings</button>
+                        <button class="dropdown-item"><i class="fas fa-shield-alt"></i> Security</button>
+                        <button class="dropdown-item logout" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile modal iframe (full-screen overlay) -->
+                <div id="profileModal" class="profile-full-modal">
+                    <iframe src="../HTML_FILES/profile.html" class="profile-full-iframe" frameborder="0"></iframe>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ==========================================================
+             MAIN CONTENT: CONTACT PAGE
+             ========================================================== -->
+        <div class="container">
+            <!-- Page header -->
+            <section style="text-align:center;padding:3rem 0;">
+                <h1 style="font-size:2.5rem;color:var(--primary);margin-bottom:1rem;"><i class="fas fa-envelope"></i> Contact Us</h1>
+                <p style="font-size:1.2rem;color:#666;max-width:800px;margin:0 auto;">Get in touch with SmartGovWeb team or report issues.</p>
+            </section>
+
+            <!-- Contact info cards: Email, Phone, Address -->
+            <section style="margin:3rem 0;">
+                <h2 style="text-align:center;color:var(--primary);border-bottom:3px solid var(--accent);display:inline-block;padding-bottom:0.5rem;"><i class="fas fa-info-circle"></i> Contact Information</h2>
+                <div class="grid-container" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;">
+                    <div class="card">
+                        <div style="padding:1.5rem;border-bottom:1px solid #eee;display:flex;align-items:center;">
+                            <i class="fas fa-envelope" style="font-size:2rem;color:var(--primary);margin-right:1rem;"></i>
+                            <h3 style="margin:0;color:var(--primary);">Email</h3>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <p style="font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;">support@smartgovweb.in</p>
+                            <p>General inquiries and support</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div style="padding:1.5rem;border-bottom:1px solid #eee;display:flex;align-items:center;">
+                            <i class="fas fa-phone" style="font-size:2rem;color:var(--secondary);margin-right:1rem;"></i>
+                            <h3 style="margin:0;color:var(--secondary);">Phone</h3>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <p style="font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;">+91 98765 43210</p>
+                            <p>Available 9 AM - 6 PM (Mon-Sat)</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div style="padding:1.5rem;border-bottom:1px solid #eee;display:flex;align-items:center;">
+                            <i class="fas fa-map-marker-alt" style="font-size:2rem;color:var(--accent);margin-right:1rem;"></i>
+                            <h3 style="margin:0;color:var(--accent);">Address</h3>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <p>Government IT Department<br>Smart City Hub, Gandhinagar, Gujarat</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact message form -->
+            <section style="max-width:700px;margin:3rem auto;">
+                <h2 style="text-align:center;color:var(--primary);border-bottom:3px solid var(--accent);display:inline-block;padding-bottom:0.5rem;"><i class="fas fa-comment-dots"></i> Send Message</h2>
+                <form id="contactForm" style="background:white;padding:2.5rem;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.1);">
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block;margin-bottom:0.5rem;font-weight:500;">Your Name *</label>
+                        <input type="text" id="contact-name" required style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:16px;">
+                    </div>
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block;margin-bottom:0.5rem;font-weight:500;">Email *</label>
+                        <input type="email" id="contact-email" required style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:16px;">
+                    </div>
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block;margin-bottom:0.5rem;font-weight:500;">Subject</label>
+                        <input type="text" id="contact-subject" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:16px;">
+                    </div>
+                    <div style="margin-bottom:1.5rem;">
+                        <label style="display:block;margin-bottom:0.5rem;font-weight:500;">Message *</label>
+                        <textarea id="contact-message" rows="6" required placeholder="Tell us how we can help..." style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;font-size:16px;resize:vertical;"></textarea>
+                    </div>
+                    <button id="contactSubmitBtn" type="submit" style="width:100%;padding:14px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:1.1rem;font-weight:500;cursor:pointer;">Send Message</button>
+                </form>
+            </section>
+
+            <!-- Admin-only inbox section (toggled via JS based on admin status) -->
+            <section id="admin-contact-section" style="display:none;max-width:900px;margin:3rem auto;">
+                <h2 style="text-align:center;color:var(--primary);border-bottom:3px solid var(--accent);display:inline-block;padding-bottom:0.5rem;"><i class="fas fa-inbox"></i> Admin Inbox</h2>
+                <div id="adminContactMessages" style="margin-top:2rem;">
+                    <p style="color:#666;">Loading messages...</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer style="text-align:center;padding:2rem;background:var(--primary);color:#a0b4c8;">
+            &copy; 2026 SmartGovWeb. All rights reserved. | We respond within 24-48 hours.
+        </footer>
+    </div>
+
+    <!-- Shared JS: handles auth state, profile dropdown, navbar logic -->
+    <script type="module" src="../JAVASCRIPT.FILE/index1.js"></script>
+</body>
+</html>
+
