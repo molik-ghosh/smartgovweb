@@ -1,0 +1,168 @@
+<!-- ============================================================
+     about.html — SmartGovWeb About Us Page
+     ============================================================
+     Static informational page describing the SmartGovWeb mission,
+     key features, and team. Shares the same navbar structure as
+     the main portal for consistent navigation.
+     Dependencies: index.css, index.js (for shared auth/nav UI)
+     ============================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - SmartGovWeb</title>
+    <!-- Google Fonts: Roboto for consistent typography across portal -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 for vector icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- Shared stylesheet with the main portal -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body style="opacity:1;">
+
+    <!-- ==========================================================
+         MAIN APP CONTAINER
+         Uses inline style to force visibility (bypasses loading screen).
+         ========================================================== -->
+    <div id="app-content" class="app-content" style="display:block;">
+        <!-- =======================================================
+             NAVIGATION BAR (shared structure with index.html)
+             Includes logo, nav links, "More" dropdown, and profile.
+             Admin link is hidden by default; shown via JS for admins.
+             ======================================================= -->
+        <nav>
+            <div class="logo">
+                <i class="fas fa-landmark"></i> SmartGovWeb
+            </div>
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="index.html">
+                        <button class="nav-btn">
+                            <i class="fas fa-users"></i> Home
+                        </button>
+                    </a>
+                    <!-- Admin link: hidden unless current user is an admin -->
+                    <a href="index.html?view=admin" id="admin-nav-link" style="display:none;">
+                        <button class="nav-btn" id="btn-admin">
+                            <i class="fas fa-user-shield"></i> Admin Panel
+                        </button>
+                    </a>
+                    <a href="complaint.html" target="_blank">
+                        <button class="nav-btn">
+                            <i class="fa-solid fa-pen"></i> Complaint
+                        </button>
+                    </a>
+                    <!-- "More" dropdown for secondary pages -->
+                    <div class="more-dropdown" style="position: relative; display: inline-block;">
+                        <button id="more-btn" class="dropdown-btn" onclick="toggleMoreDropdown(event)" title="More">
+                            <i class="fas fa-ellipsis-v"></i> More
+                        </button>
+                        <div class="more-menu" id="more-menu">
+                            <a href="about.html"><i class="fas fa-info-circle"></i> About Us</a>
+                            <a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- ===================================================
+                     PROFILE DROPDOWN
+                     Populated dynamically from Firebase user data.
+                     =================================================== -->
+                <div class="profile-wrapper">
+                    <div class="profile-btn" id="profile-btn" title="Account">
+                        <span id="profile-initials">?</span>
+                    </div>
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <div class="profile-header">
+                            <div class="profile-avatar-lg" id="dropdown-avatar">?</div>
+                            <div class="profile-info-text">
+                                <strong id="dropdown-name">Loading...</strong>
+                                <p id="dropdown-email">...</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="profileBtn"><i class="fas fa-user"></i> My Profile</button>
+                        <button class="dropdown-item"><i class="fas fa-cog"></i> Settings</button>
+                        <button class="dropdown-item"><i class="fas fa-shield-alt"></i> Security</button>
+                        <button class="dropdown-item logout" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile modal iframe (full-screen overlay) -->
+                <div id="profileModal" class="profile-full-modal">
+                    <iframe src="profile.html" class="profile-full-iframe" frameborder="0"></iframe>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ==========================================================
+             MAIN CONTENT: ABOUT PAGE
+             ========================================================== -->
+        <div class="container">
+            <!-- Hero / mission statement section -->
+            <section class="hero-section" style="text-align:center;padding:3rem 0;">
+                <h1 style="font-size:2.5rem;color:var(--primary);margin-bottom:1rem;"><i class="fas fa-building-government"></i> About SmartGovWeb</h1>
+                <p style="font-size:1.2rem;color:#666;max-width:800px;margin:0 auto;">Your trusted citizen portal for government services, area information, and public utilities.</p>
+            </section>
+
+            <!-- Mission statement -->
+            <section style="margin:3rem 0;">
+                <h2 style="text-align:center;color:var(--primary);border-bottom:3px solid var(--accent);display:inline-block;padding-bottom:0.5rem;"><i class="fas fa-bullseye"></i> Our Mission</h2>
+                <p style="font-size:1.1rem;line-height:1.8;text-align:center;max-width:700px;margin:2rem auto;color:#555;">SmartGovWeb bridges the gap between citizens and government services. Real-time area info, engineer contacts, work status, maps, complaint filing, and profile access all live in one place.</p>
+            </section>
+
+            <!-- Key features grid (reuses card component from index.css) -->
+            <section>
+                <h2 style="text-align:center;color:var(--primary);border-bottom:3px solid var(--accent);display:inline-block;padding-bottom:0.5rem;margin-bottom:2rem;"><i class="fas fa-rocket"></i> Key Features</h2>
+                <div class="grid-container" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;">
+                    <div class="card" style="border-top-color:var(--primary);">
+                        <div style="padding:1.5rem;border-bottom:1px solid #eee;display:flex;align-items:center;">
+                            <i class="fas fa-search-location" style="font-size:2rem;color:var(--primary);margin-right:1rem;"></i>
+                            <h3 style="margin:0;color:var(--primary);">Area Directory</h3>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <p>Find JE, EE, SE contacts and work status for your locality with interactive maps.</p>
+                        </div>
+                    </div>
+                    <div class="card" style="border-top-color:var(--secondary);">
+                        <div style="padding:1.5rem;border-bottom:1px solid #eee;display:flex;align-items:center;">
+                            <i class="fas fa-file-alt" style="font-size:2rem;color:var(--secondary);margin-right:1rem;"></i>
+                            <h3 style="margin:0;color:var(--secondary);">Complaint Portal</h3>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <p>File complaints directly linked to your area engineers with photo upload and status tracking.</p>
+                        </div>
+                    </div>
+                    <div class="card" style="border-top-color:var(--accent);">
+                        <div style="padding:1.5rem;border-bottom:1px solid #eee;display:flex;align-items:center;">
+                            <i class="fas fa-user-shield" style="font-size:2rem;color:var(--accent);margin-right:1rem;"></i>
+                            <h3 style="margin:0;color:var(--accent);">Admin Panel</h3>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <p>Secure data management for authorized administrators with real-time updates.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team / technology note -->
+            <section style="text-align:center;padding:3rem 0;background:#f8f9fa;">
+                <h2 style="color:var(--primary);margin-bottom:1rem;"><i class="fas fa-users"></i> Our Team</h2>
+                <p style="font-size:1.1rem;color:#555;max-width:600px;margin:0 auto;">Developed for public service using modern web technologies and Firebase-backed realtime data sync.</p>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer style="text-align:center;padding:2rem;background:var(--primary);color:#a0b4c8;">
+            &copy; 2026 SmartGovWeb. All rights reserved. | Built for citizen empowerment.
+        </footer>
+    </div>
+
+    <!-- Shared JS: handles auth state, profile dropdown, navbar logic -->
+    <script type="module" src="index.js"></script>
+</body>
+</html>
+
